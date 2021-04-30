@@ -1,12 +1,10 @@
 package com.example.demo.student;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
-import java.time.Month;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -41,13 +39,32 @@ public class StudentService {
         studentRepository.deleteById(studentId);
     }
 
+    public Optional<Student> getStudent(Long studentId) {
+        boolean studentExists = studentRepository.existsById(studentId);
+        if(!studentExists) {
+            throw new IllegalStateException("Student does not exist");
+        }
+
+        return studentRepository.findById(studentId);
+    }
+
     @Transactional
-    public void updateStudent(Long studentId, String name, String email) {
+    public void updateStudent(Long studentId, String firstname, String lastname, String middlename, String email, String telephone, List<String> courses, String dob) {
         Student student = studentRepository.findById(studentId).orElseThrow(() -> new IllegalStateException("student does not exist"));
 
-        if(name != null && name.length() > 0 && !Objects.equals(student.getName(), name)){
-            student.setName(name);
-            System.out.println("name check **************");
+        if(firstname != null && firstname.length() > 0 && !Objects.equals(student.getFirstname(), firstname)){
+            student.setFirstname(firstname);
+            System.out.println("firstname check **************");
+        }
+
+        if(lastname != null && lastname.length() > 0 && !Objects.equals(student.getLastname(), lastname)){
+            student.setLastname(lastname);
+            System.out.println("lastname check **************");
+        }
+
+        if(middlename != null && middlename.length() > 0 && !Objects.equals(student.getMiddlename(), middlename)){
+            student.setMiddlename(middlename);
+            System.out.println("middlename check **************");
         }
 
         if(email != null && email.length() > 0 && !Objects.equals(student.getEmail(), email)) {
@@ -61,6 +78,21 @@ public class StudentService {
                 System.out.println("Email not taken");
                 student.setEmail(email);
             }
+        }
+
+        if(telephone != null && telephone.length() > 0 && !Objects.equals(student.getTelephone(), telephone)){
+            student.setTelephone(telephone);
+            System.out.println("telephone check **************");
+        }
+
+        if(courses.isEmpty() != true ) {
+//            && !courses.equals(student.getCourses())
+            student.setCourses(courses);
+        }
+
+        if(dob != null && !Objects.equals(student.getDob(), dob)){
+            student.setDob(LocalDate.parse(dob));
+            System.out.println("dob check **************");
         }
 
     }

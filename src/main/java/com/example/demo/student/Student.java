@@ -3,6 +3,7 @@ package com.example.demo.student;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.List;
 
 @Entity
 @Table
@@ -20,8 +21,13 @@ public class Student {
     )
 
     private Long id;
-    private String name;
+    private String firstname;
+    private String lastname;
+    private String middlename;
     private String email;
+    private String telephone;
+    @ElementCollection
+    private List<String> courses;
     private LocalDate dob;
     @Transient
     private Integer age;
@@ -29,16 +35,24 @@ public class Student {
     public Student() {
     }
 
-    public Student(Long id, String name, String email, LocalDate dob) {
+    public Student(Long id, String firstname, String lastname, String middlename, String email, String telephone, List courses, LocalDate dob) {
         this.id = id;
-        this.name = name;
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.middlename = middlename;
         this.email = email;
+        this.telephone = telephone;
+        this.courses = courses;
         this.dob = dob;
     }
 
-    public Student(String name, String email, LocalDate dob) {
-        this.name = name;
+    public Student(String firstname, String lastname, String middlename, String email, String telephone, List courses, LocalDate dob) {
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.middlename = middlename;
         this.email = email;
+        this.telephone = telephone;
+        this.courses = courses;
         this.dob = dob;
     }
 
@@ -46,8 +60,8 @@ public class Student {
         return id;
     }
 
-    public String getName() {
-        return name;
+    public String getFirstname() {
+        return firstname;
     }
 
     public String getEmail() {
@@ -62,19 +76,39 @@ public class Student {
         return Period.between(this.dob, LocalDate.now()).getYears();
     }
 
+    public String getLastname() {
+        return lastname;
+    }
+
+    public String getMiddlename() {
+        return middlename;
+    }
+
+    public String getTelephone() {
+        return telephone;
+    }
+
+    public List<String> getCourses() {
+        return courses;
+    }
+
     @Override
     public String toString() {
         return "Student{" +
                 "id=" + id +
-                ", name='" + name + '\'' +
+                ", firstname='" + firstname + '\'' +
+                ", lastname='" + lastname + '\'' +
+                ", middlename='" + middlename + '\'' +
                 ", email='" + email + '\'' +
+                ", telephone='" + telephone + '\'' +
+                ", courses='" + courses + '\'' +
                 ", dob=" + dob +
                 ", age=" + age +
                 '}';
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
     }
 
     public void setEmail(String email) {
@@ -87,5 +121,21 @@ public class Student {
 
     public void setAge(Integer age) {
         this.age = age;
+    }
+
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
+    }
+
+    public void setMiddlename(String middlename) {
+        this.middlename = middlename;
+    }
+
+    public void setTelephone(String telephone) {
+        this.telephone = telephone;
+    }
+
+    public void setCourses(List<String> courses) {
+        this.courses = courses;
     }
 }
