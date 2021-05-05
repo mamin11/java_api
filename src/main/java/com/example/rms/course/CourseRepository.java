@@ -1,4 +1,4 @@
-package com.example.demo.course;
+package com.example.rms.course;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

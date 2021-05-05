@@ -1,17 +1,16 @@
-package com.example.demo;
+package com.example.rms;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 //@EnableJpaRepositories(basePackages = {"com.example.demo.student", "com.example.demo.course"})
 //scanBasePackages= {"com.example.demo.student", "com.example.demo.course"}
 @SpringBootApplication()
 
-		public class DemoApplication {
+		public class Rms {
 
 	public static void main(String[] args) {
-		SpringApplication.run(DemoApplication.class, args);
+		SpringApplication.run(Rms.class, args);
 	}
 
 }

@@ -1,4 +1,4 @@
-package com.example.demo.student;
+package com.example.rms.student;
 
 import javax.persistence.*;
 import java.time.LocalDate;

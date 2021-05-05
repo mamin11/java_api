@@ -1,4 +1,4 @@
-package com.example.demo.course;
+package com.example.rms.course;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
