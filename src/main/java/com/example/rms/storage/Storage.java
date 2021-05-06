@@ -24,9 +24,23 @@ public class Storage {
 
         optionalMetadata.ifPresent(map -> {
             if(!map.isEmpty()) {
-                map.forEach(metadata::addUserMetadata);
+                for (Map.Entry<String, String> entry : map.entrySet()) {
+                    String key = entry.getKey();
+                    String value = entry.getValue();
+//                    metadata.addUserMetadata(key, value);
+                    if (key == "Content-Length") {
+                        metadata.setContentLength(Long.parseLong(value));
+                    }
+                    if (key == "Content-Type") {
+                        metadata.setContentType(value);
+                    }
+                }
             }
         });
+
+        System.out.println("Metadata: " + optionalMetadata);
+
+        System.out.println("end here");
 
         try {
             s3.putObject(path, fileName, inputStream, metadata);

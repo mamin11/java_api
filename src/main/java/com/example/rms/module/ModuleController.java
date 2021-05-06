@@ -1,14 +1,16 @@
 package com.example.rms.module;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
 @RestController
 @RequestMapping(path = "api/v1/module")
+@CrossOrigin(origins = "http://localhost:8080")
 public class ModuleController {
     private ModuleService moduleService;
 
@@ -18,7 +20,6 @@ public class ModuleController {
     }
 
     @GetMapping
-    @CrossOrigin
     public List<Module> getModules() { return moduleService.getModules();}
 
     @GetMapping(path = "{moduleId}")
@@ -30,20 +31,17 @@ public class ModuleController {
     public List<Module> getModulesByCourse( @PathVariable("course") String course){ return moduleService.getModulesByCourse(course);}
 
     @PostMapping
-    @CrossOrigin
     public void addNewModule(@RequestBody Module module)
     {
         moduleService.addNewModule(module);
     }
 
     @DeleteMapping(path = "{moduleId}")
-    @CrossOrigin
     public void deleteModule(@PathVariable("moduleId") Long moduleId) {
         moduleService.deleteModule(moduleId);
     }
 
     @PutMapping(path = "{moduleId}")
-    @CrossOrigin
     public void updateModule(
             @PathVariable("moduleId") Long moduleId,
             @RequestParam(required = false) String title,
@@ -52,5 +50,16 @@ public class ModuleController {
             @RequestParam(required = false) String startDate)
     {
         moduleService.updateModule(moduleId, title, course, moduleContentLink, startDate);
+    }
+
+    @PostMapping(
+            path = "{moduleId}/content/upload",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public void uploadModuleContent(@PathVariable("moduleId") Long moduleId,
+                                    @RequestParam("file") MultipartFile file) {
+        System.out.println("File size: " + file.getSize());
+        moduleService.uploadModuleContent(moduleId, file);
     }
 }

@@ -1,21 +1,26 @@
 package com.example.rms.module;
 
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.example.rms.bucket.BucketName;
+import com.example.rms.storage.Storage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
+import java.io.IOException;
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class ModuleService {
     private final ModuleRepository moduleRepository;
+    private final Storage storage;
 
     @Autowired
-    public ModuleService(ModuleRepository moduleRepository) {
+    public ModuleService(ModuleRepository moduleRepository, Storage storage) {
         this.moduleRepository = moduleRepository;
+        this.storage = storage;
     }
 
     public List<Module> getModules(){return moduleRepository.findAll();}
@@ -67,4 +72,33 @@ public class ModuleService {
             module.setStartDate(LocalDate.parse(startDate));
         }
     }
+
+     void uploadModuleContent(Long moduleId, MultipartFile file) {
+        //check if the file is not empty
+        if (file.isEmpty()) { throw new  IllegalStateException("No file added");}
+
+        //check whether the module exists
+        Module module = moduleRepository.findById(moduleId).orElseThrow(() -> new IllegalStateException("Module does not exist"));
+
+        //prepare metadata
+         Map<String, String> metadata = new HashMap<>();
+         metadata.put("Content-Type", file.getContentType());
+         metadata.put("Content-Length", String.valueOf(file.getSize()));
+
+//         ObjectMetadata objectMetadata = new ObjectMetadata();
+//         objectMetadata.setContentType(file.getContentType());
+//         objectMetadata.setContentLength(file.getSize());
+
+         //store the file
+         //create a path depending on the module course, so that all of a course's content is in the same bucket
+         String path = String.format("%s/%s", BucketName.PROFILE_IMAGE.getBucketName(), module.getCourse());
+         //create a filename from original filename and random UUID
+         String filename = String.format("%s-%s", file.getName(), UUID.randomUUID());
+
+         try {
+             storage.save(path, filename, Optional.of(metadata), file.getInputStream());
+         } catch (IOException e) {
+             e.printStackTrace();
+         }
+     }
 }
