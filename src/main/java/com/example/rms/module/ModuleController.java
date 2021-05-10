@@ -1,5 +1,6 @@
 package com.example.rms.module;
 
+import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -30,11 +31,11 @@ public class ModuleController {
     @CrossOrigin
     public List<Module> getModulesByCourse( @PathVariable("course") String course){ return moduleService.getModulesByCourse(course);}
 
+    @GetMapping(path = "title/{title}")
+    public Optional<Module> getModuleByTitle(@PathVariable("title") String title) {return moduleService.getModuleByTitle(title);}
+
     @PostMapping
-    public void addNewModule(@RequestBody Module module)
-    {
-        moduleService.addNewModule(module);
-    }
+    public void addNewModule(@RequestBody Module module) { moduleService.addNewModule(module); }
 
     @DeleteMapping(path = "{moduleId}")
     public void deleteModule(@PathVariable("moduleId") Long moduleId) {
@@ -59,7 +60,11 @@ public class ModuleController {
     )
     public void uploadModuleContent(@PathVariable("moduleId") Long moduleId,
                                     @RequestParam("file") MultipartFile file) {
-        System.out.println("File size: " + file.getSize());
         moduleService.uploadModuleContent(moduleId, file);
+    }
+
+    @GetMapping(path = "{moduleId}/content/download")
+    public S3ObjectInputStream downloadModuleContent(@PathVariable("moduleId") Long moduleId){
+        return moduleService.downloadModuleContent(moduleId);
     }
 }
