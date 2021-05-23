@@ -11,7 +11,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping(path = "api/v1/module")
-@CrossOrigin(origins = "http://localhost:8080")
+@CrossOrigin(origins = "http://localhost:8080, https://fervent-sinoussi-2b28ca.netlify.app")
 public class ModuleController {
     private ModuleService moduleService;
 
